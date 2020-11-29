@@ -1,0 +1,27 @@
+setwd('~/Data_analyst_nanodegree')
+library(readr)
+
+Campinas <-  read_delim("campinas_data.csv", 
+                        ";", escape_double = FALSE, trim_ws = TRUE)
+Global <- read_delim("global_data.csv", 
+                                    ";", escape_double = FALSE, trim_ws = TRUE)
+Global$region <- c("Global")
+
+Campinas <- subset(Campinas, select = c(city, year, avg_temp, movel_avg_temp))
+
+colnames(Campinas)[1]<-"region"
+
+data <- merge(Global, Campinas, all = TRUE)
+
+install.packages("ggplot2")
+library(ggplot2)
+
+ggplot(aes(x = year, y = movel_avg_temp), data = data) +
+  geom_line(aes(color = region)) +
+  xlim(c(1850, 2013)) 
+
+cor.test(Campinas$movel_avg_temp, Campinas$year, 
+         method = "pearson", alternative = "greater")
+
+cor.test(Global$movel_avg_temp, Global$year, 
+         method = "pearson", alternative = "greater")
